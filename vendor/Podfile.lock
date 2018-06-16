@@ -1,0 +1,32 @@
+PODS:
+  - AFNetworking (3.2.0):
+    - AFNetworking/NSURLSession (= 3.2.0)
+    - AFNetworking/Reachability (= 3.2.0)
+    - AFNetworking/Security (= 3.2.0)
+    - AFNetworking/Serialization (= 3.2.0)
+    - AFNetworking/UIKit (= 3.2.0)
+  - AFNetworking/NSURLSession (3.2.0):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (3.2.0)
+  - AFNetworking/Security (3.2.0)
+  - AFNetworking/Serialization (3.2.0)
+  - OpenSSL-Universal (1.0.2.13)
+
+DEPENDENCIES:
+  - AFNetworking
+  - OpenSSL-Universal
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - AFNetworking
+    - OpenSSL-Universal
+
+SPEC CHECKSUMS:
+  AFNetworking: 8ac6017b94ea105479f7776e5288e48ae9c59bb4
+  OpenSSL-Universal: 401888162f11c33ebbd46f782d9229da35c61327
+
+PODFILE CHECKSUM: 72b9d27ea137d57f6dfb0ac29a2f86cd0ee18366
+
+COCOAPODS: 1.5.3
