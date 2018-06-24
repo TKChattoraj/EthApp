@@ -13,7 +13,20 @@ class MainLayout <MotionKit::Layout
         left.equals(:superview, :left).plus(20)
       end
     end
-    
+
+    add NSTextField, :main_button_result do
+      constraints do
+        top.equals(:main_button, :bottom).plus(10)
+        left.equals(:superview, :left).plus(20)
+        height.is(20)
+        width.is(200)
+      end
+      StringValue "Main Button Result"
+      editable true
+      selectable true
+    end
+
+
 
 
 
