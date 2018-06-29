@@ -6,7 +6,7 @@ class MainLayout <MotionKit::Layout
   def layout
 
     add NSButton, :main_button do
-      title "Hit Me"
+      title "Keccak-256"
       size_to_fit
       constraints do
         top.equals(:superview, :top).plus(20)
@@ -26,38 +26,25 @@ class MainLayout <MotionKit::Layout
       selectable true
     end
 
+    add NSButton, :accounts_button do
+      title "Accounts"
+      size_to_fit
+      constraints do
+        top.equals(:main_button_result, :bottom).plus(20)
+        left.equals(:superview, :left).plus(20)
+      end
+    end
 
-
-
-
-    # add NSTabView, :content_tabs do
-    #   constraints do
-    #     width.equals(:superview)
-    #     height.equals(:superview)
-    #   end
-    #
-    #   add_tab "TabViewItem_Tab1", "Tab 1" do
-    #     wantsLayer true
-    #
-    #     constraints do
-    #       width.equals(:superview).minus(10)
-    #       height.equals(:superview).minus(10)
-    #     end
-    #     backgroundColor NSColor.lightGrayColor
-    #
-    #   end
-    #
-    #   add_tab "TabViewItem_Tab2", "Tab 2" do
-    #     wantsLayer true
-    #
-    #     constraints do
-    #       width.equals(:superview).minus(10)
-    #       height.equals(:superview).minus(10)
-    #     end
-    #     backgroundColor NSColor.lightGrayColor
-    #   end
-    #
-    # end
-
+    add NSTextField, :accounts_result do
+      constraints do
+        top.equals(:accounts_button, :bottom).plus(10)
+        left.equals(:superview, :left).plus(20)
+        height.is(200)
+        width.is(200)
+      end
+      StringValue "Accounts Button Result"
+      editable true
+      selectable true
+    end
   end
 end
