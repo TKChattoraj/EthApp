@@ -119,7 +119,7 @@ class AppDelegate
     data = {"jsonrpc" => "2.0", "method" => "eth_accounts", "params" => params, "id" => ":1"}
     http_Client = HttpClient.new
     response_body = http_Client.post(data) do |response|
-      #NSLog(response)
+      NSLog(response.to_s)
       @accounts_result.stringValue = response
     end
 
