@@ -15,12 +15,12 @@ def eth_accounts
 end
 
 #returns the Keccak-256 Hash (not the standardized SHA3-256) given a hex string of data
-def web3_sha3(utf8)
+def web3_sha3(hex_string)
   # hello world
   #params = ["0x68656c6c6f20776f726c64"]
   # bar(bytes3[2])
   #params = ["0x626172286279746573335b325d29"]
-  params = [utf8]
+  params = [hex_string]
   data = {"jsonrpc" => "2.0", "method" => "web3_sha3", "params" => params, "id" => ":64"}
   @http_client.post(data) do |response|
     NSLog(response.to_s)
@@ -30,17 +30,7 @@ def web3_sha3(utf8)
 
 end
 
-#convert string to ascii (utf-8) shown in 0x
-def string_to_utf8
-  # s is string form of the method signature
-  s = "bar(bytes3[2])"
-  # s.unpack returns the 0x representation of the string in 0th element of array
-  "0x" + s.unpack('H*')[0]
-end
 
-def method_id
-  web3_sha3(string_to_utf8)
-end
 
 
 # def eth_sendTransaction
