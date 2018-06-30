@@ -6,7 +6,7 @@ class MainLayout <MotionKit::Layout
   def layout
 
     add NSButton, :main_button do
-      title "Keccak-256"
+      title "Method_ID"
       size_to_fit
       constraints do
         top.equals(:superview, :top).plus(20)
