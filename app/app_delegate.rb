@@ -33,13 +33,15 @@ class AppDelegate
 
     @main_button = @main_layout.get(:main_button)
     @main_button.target = self
-    @main_button.action = 'method_id'
+    @main_button.action = 'contract_method'
     @main_button_result = @main_layout.get(:main_button_result)
 
     @accounts_button = @main_layout.get(:accounts_button)
     @accounts_button.target = self
     @accounts_button.action = 'eth_accounts'
     @accounts_result = @main_layout.get(:accounts_result)
+
+    @function_selector = ""
 
 
   end

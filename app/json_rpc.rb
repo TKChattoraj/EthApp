@@ -22,26 +22,35 @@ def web3_sha3(hex_string)
   #params = ["0x626172286279746573335b325d29"]
   params = [hex_string]
   data = {"jsonrpc" => "2.0", "method" => "web3_sha3", "params" => params, "id" => ":64"}
+  #note:  web3_sha3 is really only responsible for providing the keccak hash and so the callback sent to the @http_client should be a callback input to the web3_sha3 itself.
   @http_client.post(data) do |response|
     NSLog(response.to_s)
-    method_id = response[0..9]
-    @main_button_result.stringValue = method_id
+    @function_selector = response[0..9]
+    @main_button_result.stringValue = @function_selector
+    encoded_data = @function_selector # we'll add in encoidng for contract method later
+    eth_call(encoded_data)
   end
 
 end
 
 
-
-
-# def eth_sendTransaction
-#   params = [
-#     "from": "0xfe879311e339402c085599ed96e06859aa88943e"
-#     "to": "0xb7e99dfc03bc71e827ba4ddd36b02ae7819489cb" # contract address
-#     "gas": "0x76c0", # 30400
-#     "gasPrice": "0x9184e72a000", #  10000000000000
-#     "value": "0x9184e72a", # 2441406250
-#     "data": [encoded data]
-#     "nonce":
-#   ]
+def eth_call(encoded_data)
+#   <build the abi encoded data>
 #
-# end
+  params = [{
+#    "from" => "0xd0985573eb82faf69b2d4ef36d1e03fec5c43ae7",
+    "to" => "0x52f35097D9B8E6324eb8720789AC66f8B3d24855", # contract address
+#    "gas" => "0x76c0", # 30400
+#    "gasPrice" => "0x9184e72a000", #  10000000000000
+#    "value" => "0x9184e72a", # 2441406250
+    "data" => encoded_data
+#   "nonce":  # nonce is optional
+  },
+  "latest"]
+   data = {"jsonrpc" => "2.0", "method" => "eth_call", "params" => params, "id" => ":1"}
+   @http_client.post(data) do |response|
+     NSLog("made it to the http_client posting eth_call")
+     NSLog(response.to_s)
+   end
+
+end

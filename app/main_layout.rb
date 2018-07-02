@@ -6,7 +6,7 @@ class MainLayout <MotionKit::Layout
   def layout
 
     add NSButton, :main_button do
-      title "Method_ID"
+      title "Contract Method"
       size_to_fit
       constraints do
         top.equals(:superview, :top).plus(20)
