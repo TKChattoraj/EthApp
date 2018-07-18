@@ -5,8 +5,8 @@ class MainLayout <MotionKit::Layout
 
   def layout
 
-    add NSButton, :main_button do
-      title "Contract Method"
+    add NSButton, :current_state_button do
+      title "Current State"
       size_to_fit
       constraints do
         top.equals(:superview, :top).plus(20)
@@ -14,14 +14,14 @@ class MainLayout <MotionKit::Layout
       end
     end
 
-    add NSTextField, :main_button_result do
+    add NSTextField, :current_state_result do
       constraints do
-        top.equals(:main_button, :bottom).plus(10)
+        top.equals(:current_state_button, :bottom).plus(10)
         left.equals(:superview, :left).plus(20)
         height.is(20)
         width.is(200)
       end
-      StringValue "Main Button Result"
+      StringValue "Current State"
       editable true
       selectable true
     end
@@ -30,7 +30,7 @@ class MainLayout <MotionKit::Layout
       title "Accounts"
       size_to_fit
       constraints do
-        top.equals(:main_button_result, :bottom).plus(20)
+        top.equals(:current_state_result, :bottom).plus(20)
         left.equals(:superview, :left).plus(20)
       end
     end
@@ -46,5 +46,34 @@ class MainLayout <MotionKit::Layout
       editable true
       selectable true
     end
+
+    add NSButton, :confirm_payment_button do
+      title "Confirm Payment"
+      size_to_fit
+      constraints do
+        top.equals(:accounts_result, :bottom).plus(20)
+        left.equals(:superview, :left).plus(20)
+      end
+    end
+
+    add NSTextField, :confirm_payment_result do
+      constraints do
+        top.equals(:confirm_payment_button, :bottom).plus(10)
+        left.equals(:superview, :left).plus(20)
+        height.is(200)
+        width.is(200)
+      end
+      StringValue "Confirm Payment Result"
+      editable true
+      selectable true
+    end
+
+
+
+
+
+
+
+
   end
 end

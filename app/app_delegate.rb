@@ -3,6 +3,7 @@ class AppDelegate
   TOOLBAR_IDENTIFIER = "AppToolbar"
   MAIN_LAYOUT_TOOLBAR_ITEM_ID = "MainToolbarItem"
   SECOND_LAYOUT_TOOLBAR_ITEM_ID = "SecondToolbarItem"
+  RESET_TOOLBAR_ITEM_ID = "ResetToolbarItem"
 
   def applicationDidFinishLaunching(notification)
     buildMenu
@@ -10,7 +11,7 @@ class AppDelegate
   end
 
   def buildWindow
-    @mainWindow = NSWindow.alloc.initWithContentRect([[240, 180], [480, 360]],
+    @mainWindow = NSWindow.alloc.initWithContentRect([[240, 180], [960, 720]],
       styleMask: NSTitledWindowMask|NSClosableWindowMask|NSMiniaturizableWindowMask|NSResizableWindowMask,
       backing: NSBackingStoreBuffered,
       defer: false)
@@ -31,15 +32,24 @@ class AppDelegate
     @second_layout = SecondLayout.new
     @mainWindow.contentView = @main_layout.view
 
-    @main_button = @main_layout.get(:main_button)
-    @main_button.target = self
-    @main_button.action = 'contract_method'
-    @main_button_result = @main_layout.get(:main_button_result)
+    @current_state_button = @main_layout.get(:current_state_button)
+    @current_state_button.target = self
+    @current_state_button.action = 'current_state'
+    @current_state_result = @main_layout.get(:current_state_result)
 
     @accounts_button = @main_layout.get(:accounts_button)
     @accounts_button.target = self
     @accounts_button.action = 'eth_accounts'
     @accounts_result = @main_layout.get(:accounts_result)
+
+    @confirm_payment_button = @main_layout.get(:confirm_payment_button)
+    @confirm_payment_button.target = self
+    @confirm_payment_button.action = 'confirm_payment'
+    @confirm_payment_result = @main_layout.get(:confirm_payment_result)
+
+
+
+
 
     @function_selector = ""
 
@@ -47,15 +57,22 @@ class AppDelegate
   end
 
   def toolbarAllowedItemIdentifiers(toolbar)
-    [MAIN_LAYOUT_TOOLBAR_ITEM_ID, SECOND_LAYOUT_TOOLBAR_ITEM_ID]
+    [RESET_TOOLBAR_ITEM_ID, MAIN_LAYOUT_TOOLBAR_ITEM_ID, SECOND_LAYOUT_TOOLBAR_ITEM_ID]
   end
 
   def toolbarDefaultItemIdentifiers(toolbar)
-    [MAIN_LAYOUT_TOOLBAR_ITEM_ID, SECOND_LAYOUT_TOOLBAR_ITEM_ID]
+    [RESET_TOOLBAR_ITEM_ID, MAIN_LAYOUT_TOOLBAR_ITEM_ID, SECOND_LAYOUT_TOOLBAR_ITEM_ID]
   end
 
   def toolbar(toolbar, itemForItemIdentifier: identifier, willBeInsertedIntoToolbar: flag)
-    if identifier == MAIN_LAYOUT_TOOLBAR_ITEM_ID
+    if identifier == RESET_TOOLBAR_ITEM_ID
+      reset = NSToolbarItem.alloc.initWithItemIdentifier(RESET_TOOLBAR_ITEM_ID)
+      reset.label = "Reset"
+      reset.toolTip = "Reset the Contract State back to AWAITING_PAYMENT"
+      reset.target = self
+      reset.action = 'reset_button_hit:'
+      reset
+    elsif identifier == MAIN_LAYOUT_TOOLBAR_ITEM_ID
       main = NSToolbarItem.alloc.initWithItemIdentifier(MAIN_LAYOUT_TOOLBAR_ITEM_ID)
       main.label = "Main"
       main.toolTip = "Go to Main View"
@@ -75,8 +92,11 @@ class AppDelegate
 
   end
 
+  def reset_button_hit(toolbar)
+    reset_state()
+  end
+
   def second_button_hit(toolbar)
-    @main_button_result.stringValue = "Main Button Result"
     @mainWindow.contentView = @second_layout.view
   end
 

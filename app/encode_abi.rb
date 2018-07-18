@@ -10,7 +10,9 @@ def string_to_utf8(string)
 end
 
 
+
+
 # function_selector provides the truncated 0x keccah-256 of the contract method being called
-def function_selector(method_signature)
-  web3_sha3(string_to_utf8(method_signature))  #note:  to do this properly, should be sending from here to web3_sha3 the callback to complete the truncating of the keccak hash--so that web3_sha3 is constrained to prodcuing the keccak hash only
+def function_selector(method_signature, &callback)
+  web3_sha3(string_to_utf8(method_signature), &callback)  #note:  to do this properly, should be sending from here to web3_sha3 the callback to complete the truncating of the keccak hash--so that web3_sha3 is constrained to prodcuing the keccak hash only
 end
