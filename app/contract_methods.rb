@@ -68,7 +68,7 @@ def confirm_payment
     encoded_abi = @function_selector #the encoded abi for the particular contract method in question
     #nonce = <optional>
     eth_sendTransaction(from, to, gas, gasPrice, value, encoded_abi) do |response2|
-      NSLog("Hi")
+      current_state()
     end
   end
 
