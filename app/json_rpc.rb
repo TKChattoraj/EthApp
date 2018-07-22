@@ -61,16 +61,21 @@ end
 def eth_sendTransaction(from, to, gas, gasPrice, value, encoded_abi, &callback)
 #   <build the abi encoded data>
 #
-  params = [{
+  params_hash = {
     "from" => from,
 #  Mnemonic:      arch cup merge marine output pudding crunch chunk marble visual cricket program for 0xf20bb3f05bda77f5c4c4fd5d23ccf9c1c93d6a1e
     "to" => to, # contract address
     "gas" => gas, # 30400
     "gasPrice" => gasPrice, #  10000000000000
-    "value" => value, # 2441406250
+#   "value" => value,
     "data" => encoded_abi
 #   "nonce":  # nonce is optional
-  }]
+  }
+  if value
+    params_hash["value"] = value
+  end
+
+  params = [params_hash]
    data = {"jsonrpc" => "2.0", "method" => "eth_sendTransaction", "params" => params, "id" => ":1"}
    @http_client.post(data) do |response|
      NSLog("made it to the http_client posting eth_sendTransaction")

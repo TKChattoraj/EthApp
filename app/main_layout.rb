@@ -56,17 +56,25 @@ class MainLayout <MotionKit::Layout
       end
     end
 
-    add NSTextField, :confirm_payment_result do
+    add NSButton, :confirm_delivery_button do
+      title "Confirm Delivery"
+      size_to_fit
       constraints do
-        top.equals(:confirm_payment_button, :bottom).plus(10)
+        top.equals(:confirm_payment_button, :bottom).plus(20)
         left.equals(:superview, :left).plus(20)
-        height.is(200)
-        width.is(200)
       end
-      StringValue "Confirm Payment Result"
-      editable true
-      selectable true
     end
+
+    add NSButton, :refund_buyer_button do
+      title "Refund Buyer"
+      size_to_fit
+      constraints do
+        top.equals(:confirm_delivery_button, :bottom).plus(20)
+        left.equals(:superview, :left).plus(20)
+      end
+    end
+
+
 
 
 

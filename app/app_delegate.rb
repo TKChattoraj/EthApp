@@ -45,11 +45,14 @@ class AppDelegate
     @confirm_payment_button = @main_layout.get(:confirm_payment_button)
     @confirm_payment_button.target = self
     @confirm_payment_button.action = 'confirm_payment'
-    @confirm_payment_result = @main_layout.get(:confirm_payment_result)
 
+    @confirm_delivery_button = @main_layout.get(:confirm_delivery_button)
+    @confirm_delivery_button.target = self
+    @confirm_delivery_button.action = 'confirm_delivery'
 
-
-
+    @refund_buyer_button = @main_layout.get(:refund_buyer_button)
+    @refund_buyer_button.target = self
+    @refund_buyer_button.action = 'refund_buyer'
 
     @function_selector = ""
 
