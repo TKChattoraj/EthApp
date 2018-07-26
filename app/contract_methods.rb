@@ -1,7 +1,15 @@
 #contract specific methods
 
 def reset_state
-  encode_dynamic_string("Hello world !")
+  ds = dynamic_string("Hello world !")
+  db = dynamic_bytes("0123456789abcdeffedcba98765432100123456789abcdeffedcba9876543210007")
+  p "Dynamic Bytes:"
+  p db
+  p db.length
+  db1 = dynamic_bytes("007")
+  p "Dynamic Bytes:"
+  p db1
+  p db1.length
   p "Entering two's compliment portion:...."
   p "Zero"
     zero = int(0)
@@ -20,6 +28,30 @@ def reset_state
     p minus_one
     p minus_one.length
   p "End two's compliment"
+
+  p "Start bool"
+  bool = bool(true)
+  p bool
+  p bool.length
+
+  bool = bool(false)
+  p bool
+  p bool.length
+  p "End bool"
+
+
+
+  array = non_fixed_size_array(bool, ds, db, minus_thirteen)
+  p "Array:......"
+  p array
+  p array.length
+  p "End Array"
+  tuple = static_tuple(one, bool(false), bool(true), minus_thirteen)
+  p "tuple:  "
+  p tuple
+  p tuple.length
+  p "End tuple"
+
 
   method = 'resetState'
   method_signature = 'resetState()'

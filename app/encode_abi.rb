@@ -1,53 +1,10 @@
 # methods to encode the abi
 
-#convert string to ascii (utf-8) shown in 0x
-def string_to_utf8(string)
-  # s is string form of the method signature
-  # s = "bar(bytes3[2])"
-  s = string
-  # s.unpack returns the 0x representation of the string in 0th element of array
-  "0x" + s.unpack('H*')[0]
-end
-
-
-
-
-# function_selector provides the truncated 0x keccah-256 of the contract method being called
-def function_selector(method_signature, &callback)
-  web3_sha3(string_to_utf8(method_signature), &callback)  #note:  to do this properly, should be sending from here to web3_sha3 the callback to complete the truncating of the keccak hash--so that web3_sha3 is constrained to prodcuing the keccak hash only
-end
-
-def encode_dynamic_string(string)
-  utf8 = string.unpack('H*')[0]
-
-  encode_dynamic_byte(utf8)
-  # length = utf8.length # length of hex digits
-  # number_bytes = "%064x" % (length/2 + (length % 2))  #number of bytes as a hex string--prepended with '0's so that the lnegth is 64.
-  # utf8_with_zeros = utf8.ljust(64, padstr='0')
-  # p "The encoded string: "
-  # p number_bytes + utf8_with_zeros
-  # p (number_bytes + utf8_with_zeros).length
-  # number_bytes + utf8_with_zeros
-end
-
-def encode_dynamic_byte(byte_string)
-  length = byte_string.length
-  number_bytes_with_prepend_zeros = "%064x" % (length/2 + (length % 2)) #number of bytes as a hex string--prepended with '0's so that the lnegth is 64.
-  byte_string_with_append_zeros = byte_string.ljust(64, padstr='0')
-
-  encoded_dynamic_byte = number_bytes_with_prepend_zeros + byte_string_with_append_zeros
-  p "The encoded dynamic byte string:"
-  p encoded_dynamic_byte
-  p encoded_dynamic_byte.length
-
-  encoded_dynamic_byte
-end
-
 def uint(int)
   "%064x" % int
 end
 
-def int(int)  #returns the hex of the two's compliment of a decimal integer
+def int(int)  #returns the hex string of the two's compliment of a decimal integer
  p "Running signed int method..."
  abs_int = int.abs
  b_str = abs_int.to_s(2)
@@ -84,4 +41,97 @@ def int(int)  #returns the hex of the two's compliment of a decimal integer
     two_comp_hex = "%064x" % two_comp_int
     return two_comp_hex
  end
+end
+
+def address(address_string)  #assume the address input is a string of the hex address
+  pad = "0" * (64 - address_string.length)
+  pad + address
+end
+
+def bool(bool)  # bool is either false or true
+  if bool
+    boolean = "0" * 63 + "1"
+  else
+    boolean = "0" * 63 + "0"
+  end
+  boolean
+end
+
+def static_bytes(b_string)
+  b_string + "0" * (64 - b_string.length)
+end
+
+
+#convert string to ascii (utf-8) shown in 0x
+def string_to_utf8(string)
+  # s is string form of the method signature
+  # s = "bar(bytes3[2])"
+  s = string
+  # s.unpack returns the 0x representation of the string in 0th element of array
+  "0x" + s.unpack('H*')[0]
+end
+
+
+def dynamic_string(string)
+  utf8 = string.unpack('H*')[0]
+
+  dynamic_bytes(utf8)
+  # length = utf8.length # length of hex digits
+  # number_bytes = "%064x" % (length/2 + (length % 2))  #number of bytes as a hex string--prepended with '0's so that the lnegth is 64.
+  # utf8_with_zeros = utf8.ljust(64, padstr='0')
+  # p "The encoded string: "
+  # p number_bytes + utf8_with_zeros
+  # p (number_bytes + utf8_with_zeros).length
+  # number_bytes + utf8_with_zeros
+end
+
+def dynamic_bytes(byte_string)  # but these are dynamic and so do we pad?
+  length = byte_string.length
+  number_bytes_with_prepend_zeros = "%064x" % (length/2 + (length % 2)) #number of bytes as a hex string--prepended with '0's so that the lnegth is 64.
+
+  ## need to rethink the padding on the dynamic byte string--padd 'if needed.'  Meaning what?  Needed when less than 64 hex digits?  or do you pad so that you have chunks of 64 hex digits?
+  byte_string_with_append_zeros = byte_string + '0' * (64 - (length % 64))
+
+  encoded_dynamic_byte = number_bytes_with_prepend_zeros + byte_string_with_append_zeros
+  p "The encoded dynamic byte string:"
+  p encoded_dynamic_byte
+  p encoded_dynamic_byte.length
+
+  encoded_dynamic_byte
+end
+
+def non_fixed_size_array(*args) # assume args are already encoded elements
+  length = args.length
+  size = "%064x" % length
+  size + args.join
+end
+
+
+
+
+
+def static_tuple(*args)  #this assumes the arguments have already been encoded based on their individual types
+  args.join
+end
+
+
+
+# def dynamic_tuple(*args)  #each arg is an already encoded element
+#   head_elements = []
+#   tail_elements = []
+#   args.each_with_index do |i, arg|
+#     if <arg is a dynamic element>
+#       head_elements[i] = "0" * 64  # prestock the head elements
+#       tail_elements[i] = arg[i]
+#     else
+#       head_elements[i] = arg[i]
+#
+#
+# end
+
+
+
+# function_selector provides the truncated 0x keccah-256 of the contract method being called
+def function_selector(method_signature, &callback)
+  web3_sha3(string_to_utf8(method_signature), &callback)  #note:  to do this properly, should be sending from here to web3_sha3 the callback to complete the truncating of the keccak hash--so that web3_sha3 is constrained to prodcuing the keccak hash only
 end
