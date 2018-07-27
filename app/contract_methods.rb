@@ -1,57 +1,62 @@
 #contract specific methods
 
 def reset_state
-  ds = dynamic_string("Hello world !")
-  db = dynamic_bytes("0123456789abcdeffedcba98765432100123456789abcdeffedcba9876543210007")
-  p "Dynamic Bytes:"
-  p db
-  p db.length
-  db1 = dynamic_bytes("007")
-  p "Dynamic Bytes:"
-  p db1
-  p db1.length
-  p "Entering two's compliment portion:...."
-  p "Zero"
-    zero = int(0)
-    p zero
-    p zero.length
-  p "-13"
-    minus_thirteen = int(-13)
-    p minus_thirteen
-    p minus_thirteen.length
-  p "1"
-    one = int(1)
-    p one
-    p one.length
-  p "-1"
-    minus_one = int(-1)
-    p minus_one
-    p minus_one.length
-  p "End two's compliment"
 
-  p "Start bool"
-  bool = bool(true)
-  p bool
-  p bool.length
-
-  bool = bool(false)
-  p bool
-  p bool.length
-  p "End bool"
-
-
-
-  array = non_fixed_size_array(bool, ds, db, minus_thirteen)
-  p "Array:......"
-  p array
-  p array.length
-  p "End Array"
-  tuple = static_tuple(one, bool(false), bool(true), minus_thirteen)
-  p "tuple:  "
-  p tuple
-  p tuple.length
-  p "End tuple"
-
+  element = Element.new(:string, "Hello world !")
+  p "Create Element"
+  p element.hex_string
+  p "End Create Element"
+  # ds = dynamic_string("Hello world !")
+  # db = dynamic_bytes("0123456789abcdeffedcba98765432100123456789abcdeffedcba9876543210007")
+  # p "Dynamic Bytes:"
+  # p db
+  # p db.length
+  # db1 = dynamic_bytes("007")
+  # p "Dynamic Bytes:"
+  # p db1
+  # p db1.length
+  # p "Entering two's compliment portion:...."
+  # p "Zero"
+  #   zero = int(0)
+  #   p zero
+  #   p zero.length
+  # p "-13"
+  #   minus_thirteen = int(-13)
+  #   p minus_thirteen
+  #   p minus_thirteen.length
+  # p "1"
+  #   one = int(1)
+  #   p one
+  #   p one.length
+  # p "-1"
+  #   minus_one = int(-1)
+  #   p minus_one
+  #   p minus_one.length
+  # p "End two's compliment"
+  #
+  # p "Start bool"
+  # bool = bool(true)
+  # p bool
+  # p bool.length
+  #
+  # bool = bool(false)
+  # p bool
+  # p bool.length
+  # p "End bool"
+  #
+  #
+  #
+  # array = non_fixed_size_array(bool, ds, db, minus_thirteen)
+  # p "Array:......"
+  # p array
+  # p array.length
+  # p "End Array"
+  # tuple = static_tuple(one, bool(false), bool(true), minus_thirteen)
+  # p "tuple:  "
+  # p tuple
+  # p tuple.length
+  # p "End tuple"
+  #
 
   method = 'resetState'
   method_signature = 'resetState()'
