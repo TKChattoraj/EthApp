@@ -2,43 +2,113 @@
 
 class Element
 
-  attr_accessor :type, :number_elements, :head, :tail, :hex_string
+  attr_accessor :type, :number_elements, :head, :tail, :hex_string, :offset,  :link, :static
 
-  def initialize(type, value)
+  def initialize(type, *value)
     @type = type
     @number_elements = nil
-    @head = ""
-    @tail = ""
+    @head = nil
+    @tail = nil
+    @offset = nil
+    @link = nil
+    @static = nil
 
     case @type
     when :uint
-      @hex_string = uint(value)
+      @hex_string = uint(value[0])
+      @static = true
     when :int
-      @hex_string = int(value)
+      @hex_string = int(value[0])
+      @static = true
     when :address
-      @hex_string = address(value)
-
+      @hex_string = address(value[0])
+      @static = true
     when :bool
-      @hex_string = bool(value)
+      @hex_string = bool(value[0])
+      @static = true
     when :bytes_static
-      @hex_string = static_bytes(value)
-
+      @hex_string = static_bytes(value[0])
+      @static = true
     when :bytes_dynamic
-      @hex_string = dynamic_bytes(value)
-
+      @hex_string = dynamic_bytes(value[0])
+      @static = false
     when :string
-      @hex_string = dynamic_string(value)
-
+      @hex_string = dynamic_string(value[0])
+      @static = false
     when :non_fixed_size_array
-      @hex_string = non_fixed_size_array(value)
+      # value array is an array of Elements--need to pass to non_fixed_size_array method the hex_string of each element in this array.
+      values_as_hex_strings = value.map{|v| v.hex_string} #an array of the hex strings of values
+      p "Non_Fixed_Array:  values as hex strings array"
+      p values_as_hex_strings
 
-    when :fixed_size_array
+      @hex_string = non_fixed_size_array(values_as_hex_strings)
+      @static = false
+    when :dynamic_array
+      values_as_hex_strings = value.map{|v| v.hex_string}
+      @hex_string = dynamic_array(value)
+      @static = false
+    when :static_tuple
+      #+++
+      # Need to confirm all elements are static
+      #+++
+      values_as_hex_strings = value.map{|v| v.hex_string}  #an array of the hex strings of values
+      p "Static Tuple:  values as hex strings array"
+      p values_as_hex_strings
+      @hex_string = static_tuple(values_as_hex_strings)
+      @static = true
+
+    when :dynamic_tuple
+
 
     end
+  end # end initialize method
 
+  def dynamic_array(element_array)  #element_array is array of elements
+    number= element_array.length
+    self.number_elements = "%064x" % number
+    array_skeleton = [self.number_elements]
+    head_length = 0
+    element_array.each do |e|
+      if e.static
+        e.head = e.hex_string
+        p "static e.head.length"
+        p e.head.length
+        p "end static e.head.length"
+      else
+        e.head = "0" * 64
+        e.tail = e.hex_string
+        p "dynamic e.head.length"
+        p e.head.length
+        p "end dynamic e.head.length"
+      end
+      head_length += e.head.length  #for each head element add 64 hex digits
+    end
 
+    tail_length = 0
+    offset_value = head_length
 
+    element_array.each do |e|  # add the head elements or placeholders for the dynamic elements where the head will point to the position of the e.tail element.
+      array_skeleton << e.head
+      if e.tail
+        e.link = array_skeleton.length - 1  # e.link value is the array_skeleton index value for the e.head element
+      end
+    end
 
+    element_array.each do |e|  #add in the tail elements and revise head elements with the correct offset
+      if e.tail
+        p "tail:"
+        p e.tail
+        p "End tail"
+        array_skeleton << e.tail
+        e.offset = "%064x" % offset_value
+        array_skeleton[e.link] = e.offset
+        p "tail offset"
+        p e.offset
+        p "End tail offset"
+        offset_value += e.tail.length
+      end
+    end
+    array_skeleton.join
   end
 
   def uint(int)
@@ -86,7 +156,7 @@ class Element
 
   def address(address_string)  #assume the address input is a string of the hex address
     pad = "0" * (64 - address_string.length)
-    pad + address
+    pad + address_string
   end
 
   def bool(bool)  # bool is either false or true
@@ -141,20 +211,19 @@ class Element
     encoded_dynamic_byte
   end
 
-  def non_fixed_size_array(*args) # assume args are already encoded elements
-    length = args.length
+  def non_fixed_size_array(elements_array) # assume elements are encoded
+    length = elements_array.length
     size = "%064x" % length
     p "array size size"
     p size.length
-    size + args.join
+    p "number in array as decimal and then hex"
+    p length
+    p size
+    size + elements_array.join
   end
 
-
-
-
-
-  def static_tuple(*args)  #this assumes the arguments have already been encoded based on their individual types
-    args.join
+  def static_tuple(elements_array)  #this assumes the arguments have already been encoded based on their individual types
+    elements_array.join
   end
 
 

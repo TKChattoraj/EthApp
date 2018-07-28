@@ -2,10 +2,62 @@
 
 def reset_state
 
-  element = Element.new(:string, "Hello world !")
-  p "Create Element"
-  p element.hex_string
-  p "End Create Element"
+  string = Element.new(:string, "Hello world !")
+  p "Create String"
+  p string.hex_string
+  p "End Create String"
+
+  db = Element.new(:bytes_dynamic, "0123456789abcdeffedcba98765432100123456789abcdeffedcba9876543210007" )
+  p "Create Dynamic Bytes"
+  p db.hex_string
+  p db.hex_string.length
+  p "End Dynamic Bytes"
+
+  zero = Element.new(:int, 0)
+  p "Create Zero int"
+  p zero.hex_string
+  p zero.hex_string.length
+  p "End Zero int"
+
+  minus_thirteen = Element.new(:int, -13)
+  p "Create Minus Thirteen int"
+  p minus_thirteen.hex_string
+  p minus_thirteen.hex_string.length
+  p "End Minus Thirteen int"
+
+  thirteen = Element.new(:uint, 13)
+  p "Create Thirteen uint"
+  p thirteen.hex_string
+  p thirteen.hex_string.length
+  p "End Thirteen uint"
+
+  bool = Element.new(:bool, true)
+  p "Create bool"
+  p bool.hex_string
+  p bool.hex_string.length
+  p "End bool"
+
+  non_fixed_array = Element.new(:non_fixed_size_array, bool, db, string, minus_thirteen, thirteen)
+  p "Create Non-Fixed Array"
+  p non_fixed_array.hex_string
+  p non_fixed_array.hex_string.length
+  p "End Non-Fixed Array"
+
+  address = Element.new(:address, "7f8f132cd2a73097182408592699477e0462d54b")
+
+  static_tuple = Element.new(:static_tuple, bool, thirteen, address)
+  p "Create Static Tuple"
+  p static_tuple.hex_string
+  p static_tuple.hex_string.length
+  p "End Static Tuple"
+
+  d_array = Element.new(:dynamic_array, bool, thirteen, string)
+  p "Create Dynamic Array"
+  p d_array.hex_string
+  p d_array.hex_string.length
+  p "End Dynamic Array"
+
+
   # ds = dynamic_string("Hello world !")
   # db = dynamic_bytes("0123456789abcdeffedcba98765432100123456789abcdeffedcba9876543210007")
   # p "Dynamic Bytes:"
