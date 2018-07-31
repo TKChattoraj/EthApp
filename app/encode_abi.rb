@@ -4,7 +4,7 @@ class Element
 
   attr_accessor :type, :number_elements, :head, :tail, :hex_string, :offset,  :link, :static
 
-  def initialize(type, *value)
+  def initialize(type, *values)
     @type = type
     @number_elements = nil
     @head = nil
@@ -15,53 +15,90 @@ class Element
 
     case @type
     when :uint
-      @hex_string = uint(value[0])
+      @hex_string = uint(values[0])
       @static = true
     when :int
-      @hex_string = int(value[0])
+      @hex_string = int(values[0])
       @static = true
     when :address
-      @hex_string = address(value[0])
+      @hex_string = address(values[0])
       @static = true
     when :bool
-      @hex_string = bool(value[0])
+      @hex_string = bool(values[0])
       @static = true
     when :bytes_static
-      @hex_string = static_bytes(value[0])
+      @hex_string = static_bytes(values[0])
       @static = true
     when :bytes_dynamic
-      @hex_string = dynamic_bytes(value[0])
+      @hex_string = dynamic_bytes(values[0])
       @static = false
     when :string
-      @hex_string = dynamic_string(value[0])
+      @hex_string = dynamic_string(values[0])
       @static = false
     when :non_fixed_size_array
       # value array is an array of Elements--need to pass to non_fixed_size_array method the hex_string of each element in this array.
-      values_as_hex_strings = value.map{|v| v.hex_string} #an array of the hex strings of values
+      values_as_hex_strings = values.map{|v| v.hex_string} #an array of the hex strings of values
       p "Non_Fixed_Array:  values as hex strings array"
       p values_as_hex_strings
 
       @hex_string = non_fixed_size_array(values_as_hex_strings)
       @static = false
     when :dynamic_array
-      values_as_hex_strings = value.map{|v| v.hex_string}
-      @hex_string = dynamic_array(value)
+      values_as_hex_strings = values.map{|v| v.hex_string}
+      @hex_string = dynamic_array(values)
       @static = false
     when :static_tuple
       #+++
       # Need to confirm all elements are static
       #+++
-      values_as_hex_strings = value.map{|v| v.hex_string}  #an array of the hex strings of values
+      values_as_hex_strings = values.map{|v| v.hex_string}  #an array of the hex strings of values
       p "Static Tuple:  values as hex strings array"
       p values_as_hex_strings
       @hex_string = static_tuple(values_as_hex_strings)
       @static = true
 
     when :dynamic_tuple
-
+      @hex_string = dynamic_tuple(values)
+      @static = false
 
     end
   end # end initialize method
+
+  def dynamic_tuple(element_array)
+
+    array_skeleton = []
+    head_length = 0
+    tail_length = 0
+    element_array.each do |e|
+      if e.static
+        e.head = e.hex_string
+      else
+        e.head = "0" * 64
+        e.tail = e.hex_string
+      end
+      array_skeleton << e.head
+      head_length += e.head.length
+      if e.tail
+        e.link = array_skeleton.length - 1
+      end
+    end
+    offset = head_length
+    element_array.each do |e|
+      if e.tail
+        array_skeleton << e.tail
+        e.head = "%064x" % offset
+        p "Offset: "
+        p e.head
+        p "End Offset"
+        array_skeleton[e.link] = e.head
+        offset += e.tail.length
+      end
+    end
+
+    array_skeleton.join
+
+  end
+
 
   def dynamic_array(element_array)  #element_array is array of elements
     number= element_array.length
@@ -75,7 +112,7 @@ class Element
         p e.head.length
         p "end static e.head.length"
       else
-        e.head = "0" * 64
+        e.head = "0" * 64  #making placeholder for those elements that will need an offset.  Will supply the offset in another loop.
         e.tail = e.hex_string
         p "dynamic e.head.length"
         p e.head.length
@@ -85,7 +122,7 @@ class Element
     end
 
     tail_length = 0
-    offset_value = head_length
+    offset_value = head_length  #initialize the offset value as the length of all the heads.
 
     element_array.each do |e|  # add the head elements or placeholders for the dynamic elements where the head will point to the position of the e.tail element.
       array_skeleton << e.head

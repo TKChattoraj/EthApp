@@ -57,6 +57,12 @@ def reset_state
   p d_array.hex_string.length
   p "End Dynamic Array"
 
+  d_tuple = Element.new(:dynamic_tuple, bool, string)
+  p "Create Dynamic Tuple"
+  p d_tuple.hex_string
+  p d_tuple.hex_string.length
+  p "End Dynamic Tuple"
+
 
   # ds = dynamic_string("Hello world !")
   # db = dynamic_bytes("0123456789abcdeffedcba98765432100123456789abcdeffedcba9876543210007")
